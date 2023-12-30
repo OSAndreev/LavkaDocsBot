@@ -93,8 +93,7 @@ async def get_message(state):
                 forms_info.append({'data': answer_data, 'id': answer_id})
                 await state.update_data(forms_info=forms_info)
                 scheduler.remove_job('form' + '&' + user_data['chat_id'] + '&' + str(len(forms_info)))
-                mail.store(latest_email_id, '+FLAGS', '\\Deleted')
-                mail.expunge()
+
                 # Если все три формы заполнены, отправляем информацию по ним и выгружаем в чат
                 if len(forms_info) == 3:
 
@@ -102,7 +101,8 @@ async def get_message(state):
                     scheduler.remove_job('parser' + user_data['chat_id'])
                 else:
                     await send_second_form(len(forms_info), state)
-
+            mail.store(latest_email_id, '+FLAGS', '\\Deleted')
+            mail.expunge()
 
     print(forms_info)
 
